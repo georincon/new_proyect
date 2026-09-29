@@ -1,0 +1,6 @@
+**
+!vdr-service/build/install/**
+!did-tools/build/install/**
+!wallet-service/build/install/**
+!credential-service/build/install/**
+!wallet-sim/build/install/**

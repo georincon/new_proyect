@@ -1,0 +1,16 @@
+build/
+.gradle/
+.kotlin/
+deploy/certs/*
+!deploy/certs/.gitkeep
+deploy/.env
+*.iml
+.idea/
+evidencias/work/lab.json
+evidencias/work/avance.json
+evidencias/work/c1.json
+evidencias/work/c2.json
+evidencias/work/authority.json
+evidencias/work/avance-issuer-key.json
+evidencias/work/secrets-*.txt
+evidencias/work/dump*.sql

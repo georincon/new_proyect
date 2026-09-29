@@ -1,0 +1,405 @@
+Compilando y construyendo imágenes (todos los módulos)…
+Preparando entorno limpio (docker compose down -v && up)…
+VDR de extensión — recorrido E2E — 2026-09-29T15:54:00-05:00 — dominio civica-desarrollo.avance.org.co
+Canales: lectura https://civica-desarrollo.avance.org.co/ (443) · escritura mTLS https://civica-desarrollo.avance.org.co:8443/admin/v1 (dentro de la red Docker)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-004 · paso 0 — el camino base y el VDR de extensión encendido
+════════════════════════════════════════════════════════════════════
+  ✔ PASS  camino base responde (/base/ping)
+  ✔ PASS  health informa vdr=enabled
+  ✔ PASS  el puerto de la aplicación y de Postgres NO están publicados en el host
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-005 · Publicación del DID Document bajo did:web (laboratorio)
+════════════════════════════════════════════════════════════════════
+did:web:civica-desarrollo.avance.org.co:lab:laboratorio
+https://civica-desarrollo.avance.org.co/lab/laboratorio/did.json
+Clave P-256 generada. Multikey público: zDnaengL8nGYTWXuzsxDp3oiyL2Gcyefr1GDjXswqaqjMfHS2
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=8efc830b-4c36-497d-a186-6f73d6aa7885 audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=CREATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1 docHash=sha256:ddbff673d46c29587efa48f5dbdafda2e6a8d8bf120112e23566896c91c517b8
+[4/4] escritura .... 201 If-Match=0 Idempotency-Key=9cacc073-7be4-41d5-984a-5124003f2b9c
+{
+    "operationId": "18b4c413-f059-49a7-a94c-b7833ee51925",
+    "did": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio",
+    "purpose": "CREATE",
+    "status": "CONFIRMED",
+    "version": 1,
+    "hash": "sha256:ddbff673d46c29587efa48f5dbdafda2e6a8d8bf120112e23566896c91c517b8",
+    "publicUrl": "https://civica-desarrollo.avance.org.co/lab/laboratorio/did.json"
+}
+  ✔ PASS  publicación aceptada (201, CONFIRMED)
+  Documento servido por HTTPS:
+    {
+      "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/multikey/v1"
+      ],
+      "assertionMethod": [
+        "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1"
+      ],
+      "authentication": [
+        "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1"
+      ],
+      "id": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio",
+      "verificationMethod": [
+        {
+          "controller": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio",
+          "id": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1",
+          "publicKeyMultibase": "zDnaengL8nGYTWXuzsxDp3oiyL2Gcyefr1GDjXswqaqjMfHS2",
+          "type": "Multikey"
+        }
+      ]
+    }
+  ✔ PASS  C1: se sirve por HTTPS en la URL calculada (200 application/did+json)
+  ✔ PASS  C2: hash del contenido servido == hash devuelto por el registro
+  ✔ PASS  C2: contiene la clave pública correcta (Multikey del keygen)
+  ✔ PASS  C3: sin claves privadas ni datos civiles en el documento
+
+    "error": "INVALID_DOCUMENT",
+    "message": "El documento no cumple el perfil de publicación",
+    "details": [
+        "ID_MISMATCH: El id 'did:web:civica-desarrollo.avance.org.co:lab:otro' no coincide con el DID esperado 'did:web:civica-desarrollo.avance.org.co:lab:laboratorio'",
+        "INVALID_VERIFICATION_METHOD: El id 'did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1' debe ser una URL DID con fragmento del propio documento",
+        "UNAUTHORIZED_CONTROLLER: did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1: controlador no autorizado (did:web:civica-desarrollo.avance.org.co:lab:laboratorio)"
+    ]
+}
+  ✔ PASS  C4: id desajustado se rechaza (422 INVALID_DOCUMENT)
+
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío FALLÓ: HTTP 412 {"error":"PRECONDITION_FAILED","message":"No se emite desafío: precondiciones incumplidas","details":["NAMESPACE_NOT_RESERVED"]}
+  ✔ PASS  un DID de ciudadano no se puede crear (412 NAMESPACE_NOT_RESERVED)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-006 · Publicación del DID Document institucional (entidad Avance)
+════════════════════════════════════════════════════════════════════
+Clave P-256 generada. Multikey público: zDnaedE5cgqsJd1PvZgf5uDDCSuL6G65nF5vbiH5YLuQEcLwg
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=18561c85-6a6e-42be-bf0c-d3bf2995e99f audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=CREATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1 docHash=sha256:cb5799bae48300ce58298c4c0420fafd49cdd91719126e6aa5a6ae8992694978
+[4/4] escritura .... 201 If-Match=0 Idempotency-Key=953d36c3-b154-4450-8435-2057eaa5fb94
+{
+    "operationId": "48973610-cb70-4d58-a9f0-b0bd60db650d",
+    "did": "did:web:civica-desarrollo.avance.org.co:entidades:avance",
+    "purpose": "CREATE",
+    "status": "CONFIRMED",
+    "version": 1,
+    "hash": "sha256:cb5799bae48300ce58298c4c0420fafd49cdd91719126e6aa5a6ae8992694978",
+    "publicUrl": "https://civica-desarrollo.avance.org.co/entidades/avance/did.json"
+}
+  ✔ PASS  C1: el documento institucional se sirve por HTTPS y es resoluble
+  ✔ PASS  C1: resoluble por el cliente consumidor (ERSo 007)
+  ✔ PASS  C3: sin claves privadas ni datos civiles
+{
+    "id": "48973610-cb70-4d58-a9f0-b0bd60db650d",
+    "did": "did:web:civica-desarrollo.avance.org.co:entidades:avance",
+    "purpose": "CREATE",
+    "clientId": "avance-issuer",
+    "status": "CONFIRMED",
+    "version": 1,
+    "hash": "sha256:cb5799bae48300ce58298c4c0420fafd49cdd91719126e6aa5a6ae8992694978",
+    "publicUrl": "https://civica-desarrollo.avance.org.co/entidades/avance/did.json",
+    "idempotencyKey": "953d36c3-b154-4450-8435-2057eaa5fb94",
+    "requestHash": "sha256:074bd2ac46321e290b847a9cb447832b9f2d68e372a1cb680db9bcfb222187cb",
+    "createdAt": "2026-09-29T20:54:14.845086Z",
+    "confirmedAt": "2026-09-29T20:54:14.868371Z"
+}
+  ✔ PASS  C4: evidencia registrada (versión, hash y URL pública)
+  — escritura autenticada y limitada al namespace —
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío FALLÓ: HTTP 409 {"error":"ALREADY_EXISTS","message":"El DID ya existe (versión 1); use UPDATE"}
+token FALLÓ: HTTP 401 {"error":"invalid_client","message":"Credenciales de cliente inválidas"}
+  ✔ PASS  C2: credenciales incorrectas -> 401 invalid_client
+token FALLÓ: HTTP 403 {"error":"MTLS_REQUIRED","message":"El canal de escritura exige certificado cliente válido de la entidad"}
+  ✔ PASS  C2: certificado de OTRA entidad con credenciales de Avance -> 403 MTLS_REQUIRED
+</body>
+</html>
+  ✔ PASS  C2: certificado de una CA desconocida -> handshake TLS rechazado por nginx (no llega a la aplicación)
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío FALLÓ: HTTP 412 {"error":"PRECONDITION_FAILED","message":"No se emite desafío: precondiciones incumplidas","details":["NAMESPACE_NOT_OWNED"]}
+  ✔ PASS  C2: laboratorio no puede escribir en el namespace de Avance (412 NAMESPACE_NOT_OWNED)
+  ✔ PASS  canal público NO acepta escrituras (PUT/POST/DELETE)
+  ✔ PASS  el canal de escritura exige certificado cliente (nginx responde 400 antes de llegar a la aplicación)
+  Traza de auditoría (acciones):
+    2026-09-29T20:54:00.029574Z  system  NAMESPACE_RESERVED  v-
+    2026-09-29T20:54:14.821836Z  avance-issuer  CHALLENGE_ISSUED  v-
+    2026-09-29T20:54:14.845086Z  avance-issuer  WRITE_CREATE  v1
+    2026-09-29T20:54:14.868371Z  system  PUBLICATION_CONFIRMED  v1
+    2026-09-29T20:54:28.874207Z  lab-operator  CHALLENGE_DENIED  v-
+  ✔ PASS  C2: la operación quedó trazada (WRITE_CREATE con actor avance-issuer)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-008 · Ciclo de vida y trazabilidad (namespace entidades/avance-ciclo)
+════════════════════════════════════════════════════════════════════
+Clave P-256 generada. Multikey público: zDnaesvo8mPu7eYrjD9n5eAYt292PEzHZh1XJ7JC4NHPXbUVU
+Clave P-256 generada. Multikey público: zDnaeyYnTbkkKXsckhsfKU5aE2XXkbwDTCqKG97sP9JALFF3m
+  — versión 1: CREATE —
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=63e433c4-bcff-4542-8b32-7db867fb47c9 audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=CREATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1 docHash=sha256:2ca7451eb21b927c07d4027ca3594cef01a3447e8f98b23a1de6041e2e6af1fa
+[4/4] escritura .... 201 If-Match=0 Idempotency-Key=480a93bd-4724-4da5-abc1-0a698e8bed3b
+{
+  ✔ PASS  C4: la escritura devolvió versión, hash y URL pública
+  ✔ PASS  C5: confirmada por lectura de la URL y comparación de hash
+  — versión 2: UPDATE con rotación de clave (firma la clave VIGENTE c1) —
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=1a7fa9a2-7213-4623-ac80-04f966d59913 audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=UPDATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1 docHash=sha256:213eea48e303ffd80961a6f8e2d7ac5220b25547fca46f32217baa708889d4f8
+[4/4] escritura .... 200 If-Match=1 Idempotency-Key=11b876e1-88d4-4e57-a3a8-4505f6f811cd
+{
+  ✔ PASS  rotación aceptada: la prueba la firmó la clave vigente
+    "error": "INVALID_PROOF",
+    "message": "Prueba de posesión inválida: firma no válida"
+}
+  ✔ PASS  la clave anterior ya no puede escribir (403 INVALID_PROOF)
+        "currentVersion=2"
+    ]
+}
+  ✔ PASS  C4: versión esperada equivocada se rechaza (412 VERSION_CONFLICT)
+  — versión 3: UPDATE (firma c2) —
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=8f1fd802-7cec-4c8f-8f60-64dcdce7240e audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=UPDATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1 docHash=sha256:774a39d3c11c074ca3af1df61c38c721dbaf7988f0095097179be021272b00c1
+[4/4] escritura .... 200 If-Match=2 Idempotency-Key=6e69528f-e3eb-4d84-9666-e74d54befeb2
+{
+  ✔ PASS  versión 3 publicada
+  — versión 4: DEACTIVATE —
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío ...... 201 id=5ebd7635-eaa8-458b-bcc2-063ed12e78d9 audience=vdr:civica-desarrollo.avance.org.co:did-operation purpose=DEACTIVATE
+[3/4] prueba ....... ES256 kid=did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1 docHash=sha256:774a39d3c11c074ca3af1df61c38c721dbaf7988f0095097179be021272b00c1
+[4/4] escritura .... 200 If-Match=3 Idempotency-Key=ed0a5925-759d-4a55-a7d4-97b4c10b2513
+{
+  ✔ PASS  desactivación confirmada (la URL pública responde 410)
+  ✔ PASS  lectura pública del DID desactivado -> 410 Gone
+[1/4] token ........ OK (client_credentials + mTLS)
+[2/4] desafío FALLÓ: HTTP 409 {"error":"TERMINAL_STATE","message":"El historial está desactivado; se requiere una nueva instancia (otro namespace)"}
+  ✔ PASS  regla transversal: un historial terminal no vuelve a activarse (409 TERMINAL_STATE)
+  Historial de versiones (C7):
+    v1  CREATE  2026-09-29T20:54:39.472339Z  sha256:2ca7451eb21b927c07d4027ca3594cef01a3447e8f98b23a1de6041e2e6af1fa
+    v2  UPDATE  2026-09-29T20:54:43.531318Z  sha256:213eea48e303ffd80961a6f8e2d7ac5220b25547fca46f32217baa708889d4f8
+    v3  UPDATE  2026-09-29T20:54:49.618502Z  sha256:774a39d3c11c074ca3af1df61c38c721dbaf7988f0095097179be021272b00c1
+    v4  DEACTIVATE  2026-09-29T20:54:51.657435Z  sha256:774a39d3c11c074ca3af1df61c38c721dbaf7988f0095097179be021272b00c1
+  ✔ PASS  C7: 4 versiones en orden CREATE, UPDATE, UPDATE, DEACTIVATE
+  ✔ PASS  C7: estado reconstruido en el instante de la v2 = ACTIVE, versión 2
+  ✔ PASS  C7: estado reconstruido en el instante de la v4 = DEACTIVATED
+  ✔ PASS  C7: el historial no se puede reescribir (trigger append-only en PostgreSQL)
+  ✔ PASS  C2: desafíos emitidos quedaron registrados (tipo y audiencia)
+  ✔ PASS  C1: sin certificado cliente no se emite desafío (nginx 400; la aplicación ni se entera)
+  ✔ PASS  C1: la denegación por precondiciones (namespace ajeno) dejó rastro y no creó desafío
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-007 · Resolución y verificación como consumidor conforme
+════════════════════════════════════════════════════════════════════
+  — el consumidor resuelve el DID institucional publicado (solo lectura, GET por HTTPS) —
+    didDocument: {
+        "@context": [
+            "https://www.w3.org/ns/did/v1",
+            "https://w3id.org/security/multikey/v1"
+        ],
+        "assertionMethod": [
+            "did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1"
+        ],
+        "authentication": [
+            "did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1"
+        ],
+        "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance",
+        "service": [
+            {
+                "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance#issuer",
+                "serviceEndpoint": "https://civica-desarrollo.avance.org.co/issuer",
+                "type": "OID4VCI"
+            }
+        ],
+        "verificationMethod": [
+            {
+                "controller": "did:web:civica-desarrollo.avance.org.co:entidades:avance",
+                "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1",
+                "publicKeyMultibase": "zDnaedE5cgqsJd1PvZgf5uDDCSuL6G65nF5vbiH5YLuQEcLwg",
+                "type": "Multikey"
+            }
+        ]
+    }
+    resolutionMetadata: ResolutionMetadata(error=null, message=null, contentType=application/did+json, url=https://civica-desarrollo.avance.org.co/entidades/avance/did.json, violations=[])
+    documentMetadata: DocumentMetadata(deactivated=false, versionId=1, contentHash=sha256:cb5799bae48300ce58298c4c0420fafd49cdd91719126e6aa5a6ae8992694978)
+  VALIDA  did=did:web:civica-desarrollo.avance.org.co:entidades:avance kid=did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1 payload=solicitud-de-presentacion
+  ✔ PASS  C1: prueba firmada por la clave resuelta -> VÁLIDA
+
+  RECHAZADA  INVALID_SIGNATURE: La firma no corresponde a la clave publicada
+  ✔ PASS  C2: prueba firmada por una clave ajena -> RECHAZADA (INVALID_SIGNATURE)
+
+  RECHAZADA  DID_MISMATCH: La prueba fue firmada por did:web:civica-desarrollo.avance.org.co:entidades:avance y se esperaba did:web:civica-desarrollo.avance.org.co:entidades:otra
+  ✔ PASS  C3: DID que no coincide con el de la prueba -> RECHAZADA (DID_MISMATCH)
+
+  RECHAZADA  RESOLUTION_FAILED: notFound: El DID no existe en https://civica-desarrollo.avance.org.co/entidades/fantasma/did.json
+  ✔ PASS  C3: DID inexistente -> RECHAZADA (RESOLUTION_FAILED / notFound)
+
+  RECHAZADA  DEACTIVATED: El DID está desactivado
+  ✔ PASS  C3: DID desactivado -> RECHAZADA (DEACTIVATED)
+  ✔ PASS  C4: el consumidor solo usa GET (las pruebas unitarias con MockEngine y de interfaz lo verifican)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-001/002/003 · preparación: autoridad de attestation de laboratorio, Wallet Backend y servicio de credenciales
+════════════════════════════════════════════════════════════════════
+Autoridad de attestation de LABORATORIO creada. Raíz en lab-attestation-root.pem
+  ✔ PASS  el Wallet Backend responde por el canal de cartera (401 sin token = servicio vivo)
+  ✔ PASS  el emisor publica sus metadatos OpenID4VCI
+  ✔ PASS  ni el Wallet Backend ni el servicio de credenciales publican puertos en el host
+  ✔ PASS  los portales de administración NO están en el canal de ciudadanos (404 en :8444)
+  ✔ PASS  los portales de administración exigen certificado cliente (400 de nginx sin él)
+  ✔ PASS  la configuración de nginx es válida
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-001 · Cartera de identidad y custodia de claves en hardware (dispositivo SIMULADO + Wallet Backend real)
+════════════════════════════════════════════════════════════════════
+  · Dispositivo TEE simulado, attestation firmada por la autoridad de laboratorio; el backend real verifica la cadena
+  ✔ PASS  C1 la instancia queda registrada y activa (201, ACTIVE)
+  ✔ PASS  C3 nivel declarado = nivel verificado por attestation = TEE
+  ✔ PASS  C1 la instancia queda asociada al ciudadano
+  ✔ PASS  C3 ficha técnica: la clave nació dentro del entorno seguro (origin=GENERATED) con arranque verificado
+  ✔ PASS  C1 registro de activación en la auditoría
+  ✔ PASS  C3 un dispositivo de software que declara TEE es rechazado (PROTECTION_LEVEL_OVERSTATED)
+  ✔ PASS  C3 attestation firmada por una raíz desconocida es rechazada (UNTRUSTED_CHAIN)
+  ✔ PASS  C3 reutilizar una attestation con otro desafío es rechazado (CHALLENGE_MISMATCH)
+  ✔ PASS  C2 una clave IMPORTADA (no generada en hardware) no puede declararse no exportable
+  ✔ PASS  un ciudadano no puede tener dos carteras activas (409)
+  · Recuperación de cuenta: el dispositivo se perdió
+  ✔ PASS  C4 código de recuperación incorrecto → 401
+  ✔ PASS  C4 código correcto → token de recuperación de un solo uso
+  ✔ PASS  C4 el dispositivo nuevo se activa con el token (201)
+  ✔ PASS  C4 la cartera anterior quedó revocada
+  ✔ PASS  C4 se informa que las credenciales deben reemitirse (ligadas a la clave anterior)
+  ✔ PASS  C4 el token de recuperación no se puede reutilizar
+  · 8 claves privadas de prueba registradas en secrets-wallet.txt (solo laboratorio) para buscarlas en la base de datos
+  RESULTADO wallet: 16 PASS · 0 FAIL
+  ✔ PASS  control: el volcado de la base contiene datos de la cartera (la búsqueda no es vacía)
+  ✔ PASS  C2/C4 ninguna clave privada de los dispositivos aparece en la base de datos del backend (pg_dump)
+  ✔ PASS  la auditoría de la cartera es inalterable (trigger append-only)
+  ✔ PASS  una sola cartera activa por ciudadano: lo garantiza la base (índice único parcial)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-003 · Creación del DID y DID Document del titular (dispositivo → Wallet Backend → VDR → consumidor conforme)
+════════════════════════════════════════════════════════════════════
+  · DID del titular: did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60
+  ✔ PASS  C1 el DID y su DID Document se generan en el dispositivo (registro de generación sin material privado)
+  ✔ PASS  C2 informe de conformidad del DID Document: 10 comprobaciones, todas conformes
+  ✔ PASS  C3 authentication y assertionMethod apuntan a la clave Multikey del titular
+  ✔ PASS  publicación: el backend la entrega al VDR y la confirma leyendo la URL pública (200, PUBLISHED)
+  ✔ PASS  C4 el documento queda sellado en el dispositivo y asociado a la instancia
+  ✔ PASS  paso 6 del diagrama: el DID es resoluble públicamente por HTTPS y sirve exactamente lo construido en el dispositivo
+  ✔ PASS  el consumidor conforme verifica una firma del titular con la clave resuelta (ERSo 007)
+  ✔ PASS  respaldo cifrado en el backend: el backend no puede leerlo
+  ✔ PASS  un titular no puede publicar bajo el namespace de una entidad (DID_OUT_OF_NAMESPACE)
+  ✔ PASS  la validación es requisito previo: un documento con datos civiles no llega al VDR (DID_NOT_CONFORMANT)
+  ✔ PASS  un DID ya publicado no se publica dos veces
+  · 3 claves privadas de prueba registradas en secrets-did.txt (solo laboratorio) para buscarlas en la base de datos
+DID=did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60
+  RESULTADO did: 11 PASS · 0 FAIL
+  DID del titular: did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60
+    didDocument: {
+        "@context": [
+            "https://www.w3.org/ns/did/v1",
+            "https://w3id.org/security/multikey/v1"
+        ],
+        "assertionMethod": [
+            "did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60#key-1"
+        ],
+        "authentication": [
+            "did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60#key-1"
+        ],
+        "id": "did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60",
+        "verificationMethod": [
+            {
+                "controller": "did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60",
+                "id": "did:web:civica-desarrollo.avance.org.co:titulares:7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60#key-1",
+                "publicKeyMultibase": "zDnaepurXnPrxfvsfLSyfHJePoJjFXq3JtoY5RuHhz74QcQ2E",
+                "type": "Multikey"
+            }
+        ]
+    }
+    resolutionMetadata: ResolutionMetadata(error=null, message=null, contentType=application/did+json, url=https://civica-desarrollo.avance.org.co/titulares/7TKZAza8SP0E7INHAVuYnNoGKzBr3yUxkqY_LKQFT60/did.json, violations=[])
+    documentMetadata: DocumentMetadata(deactivated=false, versionId=1, contentHash=sha256:e20bdf99caf15cc172bd2c75bc87026bd49e11177df296bd63e58dcf6b2f958b)
+  ✔ PASS  el cliente de línea de comandos (ERSo 007) también resuelve el DID del titular
+  ✔ PASS  el DID Document del titular se sirve por HTTPS en la URL calculada (200 application/did+json)
+  ✔ PASS  el documento publicado no contiene claves privadas ni datos civiles
+  ✔ PASS  el VDR registró la escritura a nombre del Wallet Backend, no del titular
+  ✔ PASS  el namespace del titular se materializó bajo el comodín titulares/* del Wallet Backend
+  ✔ PASS  C1 ninguna clave privada del titular está en la base de datos (backend + VDR)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-002 · Suite criptográfica y formatos de credencial (dc+sd-jwt y mso_mdoc sobre OpenID4VCI/OpenID4VP)
+════════════════════════════════════════════════════════════════════
+time="2026-09-29T15:55:31-05:00" level=warning msg="Found orphan containers (vdr-ssi-tools-run-1593a328ee53) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+  ✔ PASS  C1 metadatos OpenID4VCI 1.0: anuncian dc+sd-jwt y mso_mdoc con ES256
+  ✔ PASS  el portal de administración (canal mTLS + token) crea una oferta OpenID4VCI
+  ✔ PASS  el portal de administración rechaza llamadas sin token (401)
+  ✔ PASS  C1 un tx_code incorrecto es rechazado (invalid_grant)
+  ✔ PASS  C1 emisión y recepción en dc+sd-jwt y mso_mdoc (la cartera verificó la firma del emisor resolviendo su DID)
+  ✔ PASS  C1 mso_mdoc: MSO verificado, docType y elementos leídos
+  ✔ PASS  C1 presentación OpenID4VP (direct_post): el verificador la acepta
+  ✔ PASS  C1 divulgación selectiva: el verificador recibió solo el programa (no nombre ni promedio)
+  ✔ PASS  C1 repetir la misma respuesta se rechaza
+  ✔ PASS  C2 registro de ejecución: sin diferencias respecto al perfil declarado
+  ✔ PASS  C2 formatos y algoritmos efectivamente usados = declarados (dc+sd-jwt, mso_mdoc, solo ES256)
+  · perfiles declarados: dc+sd-jwt=[ES256], mso_mdoc=[ES256 (COSE alg=-7)]
+  ✔ PASS  C3 sin protocolo propio: rutas típicas de un protocolo paralelo devuelven 404 (9 sondeadas)
+  ✔ PASS  C3 sin protocolo propio: los únicos endpoints públicos son los de OpenID4VCI/OpenID4VP
+  ✔ PASS  C3 el portal de administración NO está en el canal público (404 en 8444)
+  ✔ PASS  C4 la clave del emisor (publicada en su DID Document) y la del titular (cnf) son distintas
+| Rol | Huella (RFC 7638) | Algoritmo | La clave privada vive en | Firma | Clave pública publicada en | Verifica |
+|---|---|---|---|---|---|---|
+| ISSUER_SIGNING | `h-V5f3SOy0N4McsjbskH3CxsL7eximAy7EkwREfg_8w` | ES256 (JOSE) / ES256 (COSE alg=-7) | Signature Service del emisor (nunca sale del servicio) | la credencial: JWT del SD-JWT VC y COSE_Sign1 del MSO | DID Document del emisor (did:web:civica-desarrollo.avance.org.co:entidades:avance#key-1) en el VDR | cualquier verificador, resolviendo el DID del emisor |
+| HOLDER_PROOF | `PkEcjbdtDKWDiEODroe7l-xLAiu0PdCUkf8xa1l9aBI` | ES256 | Hardware seguro del dispositivo del titular (no exportable) | la prueba de posesión: JWT de prueba de OpenID4VCI y KB-JWT de la presentación | dentro de la credencial: 'cnf.jwk' (SD-JWT) o 'deviceKeyInfo' (mdoc) | emisor (al emitir) y verificador (al presentar), con la clave de 'cnf' |
+
+  RESULTADO credentials: 15 PASS · 0 FAIL
+  ✔ PASS  C4 la matriz de claves por rol se generó con las claves reales (ISSUER_SIGNING y HOLDER_PROOF)
+
+════════════════════════════════════════════════════════════════════
+  ERSo 2026-004 · respaldo/restauración y camino base con el registro apagado
+════════════════════════════════════════════════════════════════════
+HTTP 200 -> guardado en backup.json (30413 bytes)
+  ✔ PASS  C2: respaldo generado con checksum
+  Simulando pérdida total del estado del registro (TRUNCATE)…
+  ✔ PASS  tras la pérdida, el DID ya no se sirve (404)
+  HTTP 422
+{
+    "error": "CHECKSUM_MISMATCH",
+  ✔ PASS  un respaldo alterado se rechaza (CHECKSUM_MISMATCH)
+HTTP 200
+{
+    "restored": {
+        "entity_accounts": 4,
+        "namespaces": 5,
+        "did_documents": 4,
+        "did_document_versions": 7,
+        "operations": 7,
+        "audit_log": 56
+    },
+    "documentsVerified": 4,
+    "checksum": "sha256:558f3b19ca08fa27d7132d33a3536f2bb9f681a4a991630a3ba1dd1d96326d36"
+}
+  ✔ PASS  restauración correcta con verificación de integridad
+  ✔ PASS  C2: tras restaurar, el DID de Avance se sirve idéntico (mismo hash)
+  ✔ PASS  C2: tras restaurar, el DID del laboratorio se sirve idéntico (mismo hash)
+  ✔ PASS  C2: tras restaurar, el DID del titular (Wallet Backend) se sirve idéntico (mismo hash)
+  ✔ PASS  C2: tras restaurar, el namespace comodín del Wallet Backend sigue siendo suyo
+  ✔ PASS  C2: el historial (4 versiones) sobrevive a la restauración
+  ✔ PASS  el DID desactivado sigue desactivado tras restaurar (410)
+
+  — C3: camino base con la opción APAGADA (VDR_ENABLED=false) —
+  ✔ PASS  C3: /base/ping responde con el registro apagado
+  ✔ PASS  C3: /health informa vdr=disabled
+  ✔ PASS  C3: los endpoints de did.json no existen (404)
+  ✔ PASS  C3: el canal de escritura ni siquiera está abierto (502 desde nginx)
+  — con el VDR apagado, la cartera sigue funcionando (el camino base no depende del registro) —
+  ✔ PASS  con el VDR apagado la cartera se activa igual (el camino base no depende del registro)
+  ✔ PASS  con el VDR apagado el DID del titular se crea y valida LOCALMENTE (no depende de un registro obligatorio)
+  ✔ PASS  la publicación falla de forma controlada (502 VDR_ERROR), no con un error interno
+  ✔ PASS  la cartera sigue activa después del fallo de publicación
+  RESULTADO vdr-off: 4 PASS · 0 FAIL
+  Reactivando el registro…
+  ✔ PASS  el registro vuelve a estar encendido y conserva su estado
+
+════════════════════════════════════════════════════════════════════
+  RESULTADO: 121 comprobaciones PASS · 0 FAIL     (log: evidencias/e2e-20260929-155349.log)
+════════════════════════════════════════════════════════════════════

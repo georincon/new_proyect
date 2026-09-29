@@ -1,0 +1,21 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/multikey/v1"
+    ],
+    "id": "did:web:civica-desarrollo.avance.org.co:lab:otro",
+    "verificationMethod": [
+        {
+            "id": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1",
+            "type": "Multikey",
+            "controller": "did:web:civica-desarrollo.avance.org.co:lab:laboratorio",
+            "publicKeyMultibase": "zDnaengL8nGYTWXuzsxDp3oiyL2Gcyefr1GDjXswqaqjMfHS2"
+        }
+    ],
+    "authentication": [
+        "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1"
+    ],
+    "assertionMethod": [
+        "did:web:civica-desarrollo.avance.org.co:lab:laboratorio#key-1"
+    ]
+}

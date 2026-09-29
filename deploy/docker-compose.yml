@@ -1,0 +1,142 @@
+# Registro verificable de datos (VDR) de extensión — entorno aislado (ERSo 2026-004) + cartera y credenciales (ERSo 2026-001/002/003).
+# No expone la base de datos ni el puerto de ninguna aplicación: solo nginx publica puertos.
+name: vdr-ssi
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vdr}
+      POSTGRES_USER: ${POSTGRES_USER:-vdr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?ejecute scripts/gen-env.sh}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vdr} -d ${POSTGRES_DB:-vdr}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  vdr:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args: { APP: vdr-service }
+    image: vdr-ssi/vdr-service:local
+    environment:
+      VDR_ENABLED: ${VDR_ENABLED:-false}
+      VDR_DOMAIN: ${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+      PUBLIC_BASE_URL: https://${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+      # La confirmación lee la URL pública real: dentro de la red, el dominio resuelve a nginx.
+      CONFIRM_BASE_URL: https://${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+      CONFIRM_CA_PEM: /certs/ca.crt
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-vdr}
+      DB_USER: ${POSTGRES_USER:-vdr}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      VDR_JWT_SECRET: ${VDR_JWT_SECRET:-}
+      VDR_CLIENTS: ${VDR_CLIENTS:-}
+      VDR_REQUIRE_MTLS: "true"
+    volumes:
+      - ./certs/ca.crt:/certs/ca.crt:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  # Wallet Backend (ERSo 001/003): instancias, attestation, recuperación, publicación del DID del titular en el VDR.
+  wallet:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args: { APP: wallet-service }
+    image: vdr-ssi/wallet-service:local
+    environment:
+      VDR_DOMAIN: ${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-vdr}
+      DB_USER: ${POSTGRES_USER:-vdr}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      WALLET_MIN_LEVEL: ${WALLET_MIN_LEVEL:-SOFTWARE}
+      WALLET_ATTESTATION_ROOTS: /work/lab-attestation-root.pem   # raíz de la autoridad de LABORATORIO (en producción: raíces de Google/fabricantes)
+      WALLET_VDR_URL: https://${VDR_DOMAIN:-civica-desarrollo.avance.org.co}:8443
+      WALLET_VDR_CLIENT_ID: wallet-backend
+      WALLET_VDR_CLIENT_SECRET: ${CLIENT_SECRET_WALLET:-}
+      WALLET_VDR_P12: /certs/wallet-backend.p12
+      WALLET_VDR_P12_PASS: ${P12_PASS:-changeit}
+      WALLET_VDR_CA: /certs/ca.crt
+    volumes:
+      - ./certs:/certs:ro
+      - ../evidencias/work:/work:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  # Issuer Backend + Signature Service + Verifier (ERSo 002): OpenID4VCI 1.0 y OpenID4VP 1.0.
+  credential:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args: { APP: credential-service }
+    image: vdr-ssi/credential-service:local
+    environment:
+      VDR_DOMAIN: ${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+      CREDENTIAL_ISSUER_ID: https://${VDR_DOMAIN:-civica-desarrollo.avance.org.co}:8444
+      ISSUER_DID: did:web:${VDR_DOMAIN:-civica-desarrollo.avance.org.co}:entidades:avance
+      ISSUER_KEY_FILE: /work/avance.json              # clave del emisor de LABORATORIO; en producción: KMS/HSM
+      CREDENTIAL_ADMIN_TOKEN: ${CREDENTIAL_ADMIN_TOKEN:-}
+      RESOLVER_CA: /certs/ca.crt
+    volumes:
+      - ./certs/ca.crt:/certs/ca.crt:ro
+      - ../evidencias/work:/work:ro
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "${PUBLIC_HTTPS_PORT:-8443}:443"   # lectura pública
+      - "${ADMIN_MTLS_PORT:-9443}:8443"    # escritura (mTLS)
+      - "${CREDENTIALS_HTTPS_PORT:-8444}:8444"   # cartera y credenciales (ciudadanos)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      default:
+        aliases:
+          - ${VDR_DOMAIN:-civica-desarrollo.avance.org.co}
+    depends_on:
+      - vdr
+    restart: unless-stopped
+
+  # La "entidad": cliente de línea de comandos que habla con el registro por los canales reales (TLS + mTLS).
+  tools:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args: { APP: did-tools }
+    image: vdr-ssi/did-tools:local
+    profiles: ["tools"]
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - ./certs:/certs:ro
+      - ../evidencias/work:/work
+    working_dir: /work
+    depends_on:
+      - nginx
+
+  # La Holder App SIMULADA: ejecuta los escenarios de cartera, DID y credenciales por los canales reales.
+  holder:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args: { APP: wallet-sim }
+    image: vdr-ssi/holder-sim:local
+    profiles: ["tools"]
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - ./certs:/certs:ro
+      - ../evidencias/work:/work
+    working_dir: /work
+    depends_on:
+      - nginx
+
+volumes:
+  pgdata:

@@ -1,0 +1,21 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/multikey/v1"
+    ],
+    "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo",
+    "verificationMethod": [
+        {
+            "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1",
+            "type": "Multikey",
+            "controller": "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo",
+            "publicKeyMultibase": "zDnaesvo8mPu7eYrjD9n5eAYt292PEzHZh1XJ7JC4NHPXbUVU"
+        }
+    ],
+    "authentication": [
+        "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1"
+    ],
+    "assertionMethod": [
+        "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1"
+    ]
+}

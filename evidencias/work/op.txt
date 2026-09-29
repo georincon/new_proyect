@@ -1,0 +1,15 @@
+HTTP 200
+{
+    "id": "48973610-cb70-4d58-a9f0-b0bd60db650d",
+    "did": "did:web:civica-desarrollo.avance.org.co:entidades:avance",
+    "purpose": "CREATE",
+    "clientId": "avance-issuer",
+    "status": "CONFIRMED",
+    "version": 1,
+    "hash": "sha256:cb5799bae48300ce58298c4c0420fafd49cdd91719126e6aa5a6ae8992694978",
+    "publicUrl": "https://civica-desarrollo.avance.org.co/entidades/avance/did.json",
+    "idempotencyKey": "953d36c3-b154-4450-8435-2057eaa5fb94",
+    "requestHash": "sha256:074bd2ac46321e290b847a9cb447832b9f2d68e372a1cb680db9bcfb222187cb",
+    "createdAt": "2026-09-29T20:54:14.845086Z",
+    "confirmedAt": "2026-09-29T20:54:14.868371Z"
+}
