@@ -9,7 +9,7 @@
             "id": "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo#key-1",
             "type": "Multikey",
             "controller": "did:web:civica-desarrollo.avance.org.co:entidades:avance-ciclo",
-            "publicKeyMultibase": "zDnaesvo8mPu7eYrjD9n5eAYt292PEzHZh1XJ7JC4NHPXbUVU"
+            "publicKeyMultibase": "zDnaecetVC6EQRZz6jwBpD2yRezRjoauvSHWsguvSpNGXEKK7"
         }
     ],
     "authentication": [

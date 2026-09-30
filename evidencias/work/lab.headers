@@ -1,11 +1,11 @@
 HTTP/1.1 200 OK
 Server: nginx
-Date: Tue, 29 Sep 2026 20:54:06 GMT
+Date: Wed, 30 Sep 2026 14:20:54 GMT
 Content-Type: application/did+json
 Content-Length: 571
 Connection: keep-alive
 ETag: "1"
 Cache-Control: no-cache
-X-Content-Hash: sha256:ddbff673d46c29587efa48f5dbdafda2e6a8d8bf120112e23566896c91c517b8
+X-Content-Hash: sha256:cdb0013fb29544cd2c08543213320b55a182deafac2a8e27ca7770315f4f34e7
 X-Content-Type-Options: nosniff
 
