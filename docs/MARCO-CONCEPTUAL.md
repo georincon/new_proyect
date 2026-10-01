@@ -49,6 +49,22 @@ Orden de estudio acordado: **004 → 005 → 006 → 008 → 007 → 001 → 003
 ## 2b. Requisitos previos de TODOS los laboratorios (haz esto una vez)
 
 > **Regla de oro de los laboratorios.** Cada línea que ejecutas con `!` en Claude Code (y cada ventana de terminal nueva) es una **shell nueva**: las variables como `D` **no se conservan** entre una y otra. Por eso cada laboratorio es **un bloque que se pega completo de una sola vez**, empieza siempre con un `cd` a la carpeta correcta y define sus propias variables. Si pegas línea por línea, fallará.
+>
+> **Si al pegar en la terminal se corrompen líneas** (se pierden caracteres o espacios en comandos largos), **no pegues: ejecuta el script equivalente**, que es exactamente el mismo bloque:
+>
+> | Laboratorio | Comando |
+> |---|---|
+> | 1 · hash y firma | `bash scripts/lab-01-hash-y-firma.sh` (y `lab-01b-firma-detalles.sh`) |
+> | 2 · certificado y mTLS | `bash scripts/lab-02-certificado-y-mtls.sh` |
+> | 3 · firma JWS | `bash scripts/lab-03-firma-jws.sh` |
+> | 4 · DID Document | `bash scripts/lab-04-did-document.sh` |
+> | 5 · historial inalterable | `bash scripts/lab-05-historial-inalterable.sh` |
+> | ERSo 004 · respaldo y restauración | `bash scripts/lab-004-respaldo.sh` |
+> | ERSo 004 · capacidades | `bash scripts/lab-004-capacidades.sh` |
+> | ERSo 004 · condiciones | `bash scripts/lab-004-condiciones.sh` |
+> | ERSo 004 · pruebas por criterio | `bash scripts/lab-004-pruebas.sh` |
+>
+> Ejecútalos desde la carpeta del proyecto (`cd /home/geovani/Descargas/generic/bitacora/new_proyect`).
 
 ### Paso A — Herramientas
 Necesitas `openssl`, `curl`, `jq`, `python3` y `docker` (con `docker compose`). Compruébalo:

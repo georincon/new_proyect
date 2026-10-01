@@ -9,7 +9,7 @@ private fun usage(): Nothing {
         """
         holder-sim — Holder App SIMULADA (no es hardware seguro) y escenarios extremo a extremo por la red real.
           authority-init --out authority.json --root-out lab-attestation-root.pem
-          scenario wallet|did|credentials|vdr-off --authority authority.json --domain D --base https://D:8444 --ca ca.crt
+          scenario wallet|did|credentials|vdr-off|tour-wallet|tour-did|tour-credentials --authority authority.json --domain D --base https://D:8444 --ca ca.crt
                    [--admin-url https://D:8443 --p12 admin.p12 --p12-pass P --admin-token T]   (credentials)
                    [--secrets-out archivo]   (escribe las formas de las claves privadas de PRUEBA para buscarlas en la base)
         """.trimIndent(),
@@ -44,6 +44,9 @@ fun main(args: Array<String>) {
                         "did" -> didScenario(ctx, rep)
                         "credentials" -> credentialScenario(ctx, rep)
                         "vdr-off" -> vdrOffScenario(ctx, rep)
+                        "tour-wallet" -> walletTour(ctx)
+                        "tour-did" -> didTour(ctx)
+                        "tour-credentials" -> credentialsTour(ctx)
                         else -> usage()
                     }
                 } catch (e: Exception) {

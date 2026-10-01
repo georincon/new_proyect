@@ -16,7 +16,7 @@ POSTGRES_PASSWORD=$PG
 VDR_JWT_SECRET=$JWT
 P12_PASS=changeit
 # Cuentas de entidad: cada una con su namespace did:web reservado (ERSo 006). wallet-backend publica DID de titulares bajo titulares/* (ERSo 003).
-VDR_CLIENTS='[{"clientId":"avance-issuer","secret":"$A","displayName":"Avance (emisor institucional)","namespaces":["entidades/avance","entidades/avance-ciclo"]},{"clientId":"lab-operator","secret":"$L","displayName":"Laboratorio de pruebas de identidad","namespaces":["lab/laboratorio"]},{"clientId":"vdr-admin","secret":"$D","displayName":"Administración VDR","admin":true},{"clientId":"wallet-backend","secret":"$W","displayName":"Wallet Backend","namespaces":["titulares/*"]}]'
+VDR_CLIENTS='[{"clientId":"avance-issuer","secret":"$A","displayName":"Avance (emisor institucional)","namespaces":["entidades/avance","entidades/avance-ciclo","entidades/*"]},{"clientId":"lab-operator","secret":"$L","displayName":"Laboratorio de pruebas de identidad","namespaces":["lab/laboratorio","lab/*"]},{"clientId":"vdr-admin","secret":"$D","displayName":"Administración VDR","admin":true},{"clientId":"wallet-backend","secret":"$W","displayName":"Wallet Backend","namespaces":["titulares/*"]}]'
 CLIENT_SECRET_AVANCE=$A
 CLIENT_SECRET_LAB=$L
 CLIENT_SECRET_ADMIN=$D
