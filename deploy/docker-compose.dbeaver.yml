@@ -1,0 +1,5 @@
+# Solo para conectar un cliente SQL (DBeaver) desde este equipo. No publica nada a la red: escucha únicamente en 127.0.0.1.
+services:
+  postgres:
+    ports:
+      - "127.0.0.1:15432:5432"
